@@ -1,0 +1,27 @@
+{
+    "DummyModel": {
+        "model_class": "DummyModel",
+        "configurations": {
+            "num_embeddings": 1024,
+            "embedding_dim": 1024,
+            "dense_input_size": 1024,
+            "dense_output_size": 1024,
+            "sparse": false
+        }
+    },
+    "DummyModelSparse": {
+        "model_class": "DummyModel",
+        "configurations": {
+            "num_embeddings": 1024,
+            "embedding_dim": 1024,
+            "dense_input_size": 1024,
+            "dense_output_size": 1024,
+            "sparse": true
+        }
+    },
+    "BertCommonsenseModel": {
+        "model_class": "BertCommonsenseModel",
+        "configurations": {
+        }
+    }
+}
