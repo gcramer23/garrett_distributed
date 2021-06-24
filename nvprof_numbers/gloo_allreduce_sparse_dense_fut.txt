@@ -1,0 +1,216 @@
+(pytorch1) gcramer@dev-st-p38xlarge-1:~/cluster/work/garrett_distributed/parameter_server$ nvprof --profile-child-processes bash experiment_scripts/ddp_gloo_allreduce.sh
+==71506== NVPROF is profiling process 71506, command: python -u launcher.py --master_addr=localhost --master_port=29500 --trainer=DdpTrainer --ntrainer=2 --ncudatrainer=0 --filestore=/tmp/tmpn_k_8so02 --nserver=0 --ncudaserver=0 --rpc_timeout=60 --backend=gloo --epochs=1 --batch_size=32 --data=DummyData --mo
+Namespace(backend='gloo', batch_size=32, create_criterion='cel', create_ddp_model='basic_ddp_model', create_optimizer='sgd_optimizer', cuda_seed=0, data='DummyData', data_config_path='configurations/data_configurations.json', ddp_hook='allreduce_hook', epochs=1, filestore='/tmp/tmpn_k_8so02', hook_state='BasicHookState', iteration_step='basic_iteration_step', lr=0.0001, master_addr='localhost', master_port='29500', model='DummyModelSparse', model_config_path='configurations/model_configurations.json', ncudaserver=0, ncudatrainer=0, nserver=0, ntrainer=2, prefix_metrics_output_name='metrics', preprocess_data='preprocess_dummy_data', rpc_timeout=60, server=None, server_config_path=None, torch_seed=0, trainer='DdpTrainer', trainer_config_path=None)
+
+==71556== NVPROF is profiling process 71556, command: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=49) --multiprocessing-fork
+==71557== NVPROF is profiling process 71557, command: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=52) --multiprocessing-fork
+==71555== NVPROF is profiling process 71555, command: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=46) --multiprocessing-fork
+train epoch=0
+[W pybind_utils.h:692] Warning: Using sparse tensors in TorchScript is experimental. Many optimization pathways have not been thoroughly tested with sparse tensors. Please include the fact that the network is running sparse tensors in any bug reports submitted. (function operator())
+[W pybind_utils.h:692] Warning: Using sparse tensors in TorchScript is experimental. Many optimization pathways have not been thoroughly tested with sparse tensors. Please include the fact that the network is running sparse tensors in any bug reports submitted. (function operator())
+benchmark warmup done
+
+train epoch=0
+metrics for trainer_metrics
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+| name                                     |      min |      max |      mean |    variance |     stdev |
++==========================================+==========+==========+===========+=============+===========+
+| backward_metric,backward                 | 48.8179  | 161.463  | 110.212   |  937.876    | 30.6248   |
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+| batch_level_metric,batch_all             | 53.2586  | 169.39   | 116.619   |  966.703    | 31.0918   |
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+| foward_metric,forward_pass               |  3.20909 |   6.1863 |   4.32024 |    0.378067 |  0.614872 |
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+| hook_future_metric,gloo_dense_allreduce  |  5.95325 | 153.824  |  66.8564  | 1803.46     | 42.4672   |
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+| hook_future_metric,gloo_sparse_allreduce | 20.3302  | 100.6    |  43.2817  |  430.64     | 20.7519   |
++------------------------------------------+----------+----------+-----------+-------------+-----------+
+==71557== Profiling application: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=52) --multiprocessing-fork
+==71557== Warning: 2 API trace records have same start and end timestamps.
+This can happen because of short execution duration of CUDA APIs and low timer resolution on the underlying operating system.
+==71557== Profiling result:
+No kernels were profiled.
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+      API calls:   84.39%  30.707ms        16  1.9192ms  1.3329ms  2.2191ms  cudaGetDeviceProperties
+                    8.30%  3.0207ms         4  755.19us  708.04us  864.94us  cuDeviceTotalMem
+                    6.40%  2.3287ms       404  5.7640us       0ns  220.23us  cuDeviceGetAttribute
+                    0.56%  203.67us         4  50.918us  44.791us  67.731us  cuDeviceGetName
+                    0.09%  32.994us        21  1.5710us  1.0060us  8.6680us  cudaGetDevice
+                    0.05%  18.053us        20     902ns     776ns  1.8290us  cuDevicePrimaryCtxGetState
+                    0.04%  15.010us         4  3.7520us  2.5070us  5.4420us  cuDeviceGetPCIBusId
+                    0.04%  14.794us         4  3.6980us  3.2600us  4.3180us  cuInit
+                    0.03%  12.475us         5  2.4950us  1.8860us  3.8040us  cudaSetDevice
+                    0.03%  10.371us         8  1.2960us     400ns  3.8420us  cuDeviceGetUuid
+                    0.03%  10.077us        12     839ns       0ns  1.3870us  cuDeviceGet
+                    0.02%  6.3530us         6  1.0580us     887ns  1.4080us  cuDeviceGetCount
+                    0.02%  6.0270us         3  2.0090us  1.0400us  3.4430us  cudaGetDeviceCount
+==71555== Profiling application: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=46) --multiprocessing-fork
+==71555== Warning: 2319 API trace records have same start and end timestamps.
+This can happen because of short execution duration of CUDA APIs and low timer resolution on the underlying operating system.
+==71555== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   44.89%  208.29ms       283  735.99us  1.4720us  10.784ms  [CUDA memcpy HtoD]
+                   32.14%  149.11ms       206  723.85us  1.7600us  4.7053ms  [CUDA memcpy DtoH]
+                    5.05%  23.421ms       158  148.23us  8.9920us  328.86us  void at::native::vectorized_elementwise_kernel<int=4, at::native::MulScalarFunctor<float, float>, at::detail::Array<char*, int=2>>(int, float, float)
+                    2.70%  12.508ms        32  390.89us  388.93us  393.89us  void at::native::_GLOBAL__N__43_tmpxft_0000add5_00000000_7_Indexing_cpp1_ii_ccf56567::indexSelectLargeIndex<float, long, unsigned int, int=2, int=2, int=-2, bool=1>(at::cuda::detail::TensorInfo<float, unsigned int>, unsigned int, at::cuda::detail<long, float>, int, int, float, float, long)
+                    2.41%  11.164ms      1240  9.0030us  1.4400us  17.568us  void at::native::vectorized_elementwise_kernel<int=4, at::native::AddFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::AddFunctor<float>)
+                    2.29%  10.633ms        32  332.27us  329.28us  334.49us  void at::native::unrolled_elementwise_kernel<at::native::MulFunctor<float>, at::detail::Array<char*, int=3>, OffsetCalculator<int=2, unsigned int, bool=0>, OffsetCalculator<int=1, unsigned int, bool=0>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, float, at::native::MulFunctor<float>, char*, int=3, at::detail::Array<char*, int=3>, int=2)
+                    2.15%  9.9724ms      1480  6.7380us  1.2150us  22.560us  [CUDA memcpy DtoD]
+                    1.27%  5.8928ms        32  184.15us  182.53us  186.59us  void at::native::_GLOBAL__N__47_tmpxft_0000aac6_00000000_7_EmbeddingBag_cpp1_ii_56f7cc96::EmbeddingBag_updateOutputKernel_sum_mean<float, long>(long*, long, float*, float, long, long, long, long, long, long, int, long, float, long, at::native::_GLOBAL__N__47_tmpxft_0000aac6_00000000_7_EmbeddingBag_cpp1_ii_56f7cc96::EmbeddingBag_updateOutputKernel_sum_mean<float, long>)
+                    1.24%  5.7557ms        32  179.87us  174.37us  183.84us  void at::native::apply::coalesceValuesKernel<float, float>(long*, at::native::apply::coalesceValuesKernel<float, float>, float*, float, long, long, long)
+                    1.07%  4.9856ms       320  15.579us  13.056us  17.056us  volta_sgemm_64x32_sliced1x4_nn
+                    1.03%  4.7747ms       320  14.920us  14.080us  20.640us  volta_sgemm_64x32_sliced1x4_tn
+                    0.84%  3.8781ms       320  12.119us  11.712us  13.664us  volta_sgemm_128x32_nt
+                    0.62%  2.8747ms       664  4.3290us  1.0560us  9.4400us  void at::native::vectorized_elementwise_kernel<int=4, at::native::FillFunctor<float>, at::detail::Array<char*, int=1>>(int, float, at::native::FillFunctor<float>)
+                    0.43%  1.9950ms       320  6.2340us  5.3440us  9.4720us  _ZN2at6native13reduce_kernelILi128ELi4ENS0_8ReduceOpIfNS0_14func_wrapper_tIfZNS0_11sum_functorIfffEclERNS_14TensorIteratorEEUlffE_EEjfLi4EEEEEvT1_
+                    0.43%  1.9758ms       640  3.0870us  2.4320us  9.5680us  void splitKreduce_kernel<float, float, float, float>(cublasSplitKParams<float>, float const *, float const *, float*, float const *, float const *, float const *)
+                    0.23%  1.0592ms        32  33.099us  32.480us  34.272us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::BlockSortAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>, thrust::detail::integral_constant<bool, bool=1>, thrust::detail::integral_constant<bool, bool=0>>, bool, thrust::device_ptr<long>, thrust::device_ptr<long>, long, long*, long*, at::native::LTOp<long, bool=0>>(thrust::device_ptr<long>, thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, bool)
+                    0.22%  1.0363ms       320  3.2380us  2.8160us  6.3040us  _ZN2at6native27unrolled_elementwise_kernelIZZZNS0_21copy_device_to_deviceERNS_14TensorIteratorEbENKUlvE1_clEvENKUlvE6_clEvEUlfE_NS_6detail5ArrayIPcLi2EEE16OffsetCalculatorILi1EjLb0EESC_NS0_6memory15LoadWithoutCastENSD_16StoreWithoutCastEEEviT_T0_T1_T2_T3_T4_
+                    0.20%  936.31us       128  7.3140us  5.5680us  11.264us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::MergeAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>, thrust::detail::integral_constant<bool, bool=1>>, bool, thrust::device_ptr<long>, thrust::device_ptr<long>, long, long*, long*, at::native::LTOp<long, bool=0>, long*, long>(thrust::device_ptr<long>, thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, bool, bool=1, thrust::detail::integral_constant<bool, bool=1>)
+                    0.13%  606.84us       128  4.7400us  3.9040us  9.1840us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::PartitionAgent<thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>>, bool, thrust::device_ptr<long>, long*, long, unsigned long, long*, at::native::LTOp<long, bool=0>, long, int>(thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, thrust::cuda_cub::__merge_sort::PartitionAgent<thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>>, bool, thrust::device_ptr<long>, long*)
+                    0.12%  549.56us        32  17.173us  14.464us  17.760us  void at::native::apply::sparseElementwiseKernel<TensorCAddOp<float>, unsigned long, float>(float, at::cuda::detail::TensorInfo<unsigned long, TensorCAddOp<float>>, at::cuda::detail<long, unsigned long>, TensorCAddOp<float>, unsigned long)
+                    0.07%  343.62us        32  10.738us  10.592us  10.976us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_forward<float, float, float, int=10, bool=0>(float*, float const *, int, int, int)
+                    0.06%  285.44us        32  8.9190us  8.7360us  9.1200us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_backward<float, float, float, int=10, bool=1>(float*, float const *, float const , int, int, int)
+                    0.05%  248.57us         2  124.29us  123.49us  125.09us  void at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrayBatchedCopy<float, unsigned int, int=1, int=128, int=1>(float*, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata<at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrayBatchedCopy<float, unsigned int, int=1, int=128, int=1>, unsigned int, int=128, int=1>, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::TensorSizeStride<at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata, unsigned int=4>, int, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata)
+                    0.05%  240.19us        32  7.5060us  7.2000us  7.9680us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_forward<float, float, float, int=10, bool=1>(float*, float const *, int, int, int)
+                    0.05%  215.07us        32  6.7200us  6.2720us  8.7680us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__unique_by_key::UniqueByKeyAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int, int*>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int*, int, cub::ScanTileState<int, bool=1>, unsigned long>(thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, long, thrust::equal_to<long>, int, int*, thrust::cuda_cub::__unique_by_key::UniqueByKeyAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int, int*>)
+                    0.04%  168.19us        32  5.2550us  3.2640us  9.6960us  void at::native::_GLOBAL__N__43_tmpxft_0000add5_00000000_7_Indexing_cpp1_ii_ccf56567::indexSelectLargeIndex<float, long, unsigned int, int=1, int=1, int=-2, bool=1>(at::cuda::detail::TensorInfo<float, unsigned int>, unsigned int, at::cuda::detail<long, float>, int, int, float, float, long)
+                    0.04%  163.71us        32  5.1150us  3.1040us  9.0880us  _ZN2at6native27unrolled_elementwise_kernelIZZZNS0_21copy_device_to_deviceERNS_14TensorIteratorEbENKUlvE1_clEvENKUlvE6_clEvEUlfE_NS_6detail5ArrayIPcLi2EEE23TrivialOffsetCalculatorILi1EjESC_NS0_6memory12LoadWithCastILi1EEENSD_13StoreWithCastEEEviT_T0_T1_T2_T3_T4_
+                    0.03%  158.02us        32  4.9370us  2.6560us  8.9920us  void at::native::vectorized_elementwise_kernel<int=4, at::native::DivFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::DivFunctor<float>)
+                    0.03%  156.54us        64  2.4450us  1.1520us  9.3120us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::counting_iterator<long, thrust::use_default, thrust::use_default, thrust::use_default>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::counting_iterator<long, thrust::use_default, thrust::use_default, thrust::use_default>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::use_default, thrust::use_default)
+                    0.03%  133.09us        32  4.1580us  4.0640us  4.2880us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_backward<float, float, float, int=10, bool=0>(float*, float const *, float const , int, int, int)
+                    0.03%  129.47us        32  4.0460us  3.9360us  4.1920us  void cunn_ClassNLLCriterion_updateOutput_kernel<float, float>(float*, float*, float*, long*, float*, int, int, int, int, long)
+                    0.02%  87.936us        32  2.7480us  2.6880us  2.8800us  void cunn_ClassNLLCriterion_updateGradInput_kernel<float>(float*, float*, long*, float*, float*, int, int, int, int, long)
+                    0.01%  60.574us        32  1.8920us  1.2800us  8.8960us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__unique_by_key::InitAgent<cub::ScanTileState<int, bool=1>, int*, int>, cub::ScanTileState<int, bool=1>, unsigned long, int*>(bool=1, cub::ScanTileState<int, bool=1>, int*)
+                    0.01%  57.856us        32  1.8080us  1.7600us  1.9840us  void at::native::vectorized_elementwise_kernel<int=4, at::native::MulFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::MulFunctor<float>)
+                    0.01%  52.064us        32  1.6270us  1.6000us  1.9520us  [CUDA memset]
+                    0.01%  43.520us        32  1.3600us  1.3120us  1.5040us  _ZN73_GLOBAL__N__49_tmpxft_0000a36d_00000000_7_RangeFactories_cpp1_ii_a1dd93ac29elementwise_kernel_with_indexIiZZZN2at6native15arange_cuda_outERKN3c106ScalarES6_S6_RNS1_6TensorEENKUlvE_clEvENKUlvE10_clEvEUllE_EEvT_T0_PN15function_traitsISD_E11result_typeE
+      API calls:   72.33%  5.13308s        35  146.66ms       0ns  5.13297s  cudaStreamIsCapturing
+                   14.67%  1.04076s        21  49.560ms     878ns  589.47ms  cudaFree
+                    3.41%  242.20ms         7  34.600ms  49.584us  201.47ms  cudaHostAlloc
+                    2.29%  162.41ms      5232  31.041us  1.7880us  18.133ms  cudaLaunchKernel
+                    1.79%  126.68ms      1966  64.436us  5.4060us  10.965ms  cudaMemcpyAsync
+                    1.70%  120.34ms     41893  2.8720us       0ns  8.9112ms  cudaGetDevice
+                    1.52%  107.61ms       410  262.47us  3.5080us  4.6552ms  cudaStreamSynchronize
+                    0.39%  27.483ms        16  1.7177ms  468.44us  2.2224ms  cudaGetDeviceProperties
+                    0.36%  25.207ms        47  536.33us  8.9820us  2.2972ms  cudaMalloc
+                    0.22%  15.557ms      9069  1.7150us       0ns  1.2711ms  cudaGetLastError
+                    0.21%  14.893ms      1375  10.831us       0ns  476.34us  cudaEventQuery
+                    0.19%  13.732ms      1732  7.9280us       0ns  1.1051ms  cudaEventRecord
+                    0.19%  13.403ms      1188  11.282us       0ns  1.1805ms  cuDeviceGetAttribute
+                    0.13%  8.8909ms        12  740.91us  611.02us  880.04us  cuDeviceTotalMem
+                    0.11%  7.8322ms       960  8.1580us       0ns  3.0698ms  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.08%  5.9677ms         3  1.9892ms  21.910us  5.9144ms  cudaMemcpy
+                    0.08%  5.5029ms       608  9.0500us     165ns  1.3207ms  cudaEventSynchronize
+                    0.07%  5.3137ms       920  5.7750us       0ns  61.260us  cudaEventCreateWithFlags
+                    0.06%  4.0591ms       915  4.4360us       0ns  677.77us  cudaEventDestroy
+                    0.04%  2.5592ms        14  182.80us  4.3230us  1.8100ms  cudaDeviceSynchronize
+                    0.03%  2.4088ms       280  8.6020us  1.2730us  55.500us  cudaStreamWaitEvent
+                    0.03%  2.3436ms       888  2.6390us       0ns  8.5530us  cudaSetDevice
+                    0.03%  1.9075ms       304  6.2740us       0ns  48.260us  cudaEventElapsedTime
+                    0.02%  1.7335ms        32  54.172us  37.829us  92.464us  cudaMemsetAsync
+                    0.02%  1.2329ms        64  19.264us  2.9600us  253.95us  cudaStreamCreateWithPriority
+                    0.02%  1.1939ms       832  1.4340us       0ns  4.1300us  cudaPeekAtLastError
+                    0.01%  852.32us        12  71.026us  42.694us  96.750us  cuDeviceGetName
+                    0.01%  850.49us       388  2.1910us       0ns  5.9790us  cudaDeviceGetAttribute
+                    0.01%  545.41us       360  1.5150us       0ns  17.682us  cudaFuncSetAttribute
+                    0.00%  28.050us        27  1.0380us       0ns  1.7880us  cuDevicePrimaryCtxGetState
+                    0.00%  26.007us        20  1.3000us     752ns  2.3770us  cuDeviceGet
+                    0.00%  19.701us         4  4.9250us  3.5680us  5.4680us  cuDeviceGetPCIBusId
+                    0.00%  18.572us         6  3.0950us       0ns  4.7650us  cuInit
+                    0.00%  16.901us        16  1.0560us       0ns  1.5170us  cuDeviceGetUuid
+                    0.00%  15.599us         8  1.9490us     834ns  5.9930us  cuDeviceGetCount
+                    0.00%  8.7390us         4  2.1840us  1.0350us  4.1760us  cudaGetDeviceCount
+                    0.00%  7.7910us         1  7.7910us  7.7910us  7.7910us  cudaFuncGetAttributes
+                    0.00%  5.0590us         2  2.5290us  1.4960us  3.5630us  cuDriverGetVersion
+==71556== Profiling application: /fsx/users/gcramer/conda/envs/pytorch1/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=42, pipe_handle=49) --multiprocessing-fork
+==71556== Warning: 4006 API trace records have same start and end timestamps.
+This can happen because of short execution duration of CUDA APIs and low timer resolution on the underlying operating system.
+==71556== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   46.03%  211.74ms       283  748.20us  1.5040us  13.701ms  [CUDA memcpy HtoD]
+                   30.75%  141.45ms       198  714.40us  2.0800us  4.5491ms  [CUDA memcpy DtoH]
+                    5.12%  23.541ms       158  148.99us  9.1520us  334.30us  void at::native::vectorized_elementwise_kernel<int=4, at::native::MulScalarFunctor<float, float>, at::detail::Array<char*, int=2>>(int, float, float)
+                    2.72%  12.511ms        32  390.96us  388.64us  393.73us  void at::native::_GLOBAL__N__43_tmpxft_0000add5_00000000_7_Indexing_cpp1_ii_ccf56567::indexSelectLargeIndex<float, long, unsigned int, int=2, int=2, int=-2, bool=1>(at::cuda::detail::TensorInfo<float, unsigned int>, unsigned int, at::cuda::detail<long, float>, int, int, float, float, long)
+                    2.44%  11.207ms      1240  9.0370us  1.4400us  21.120us  void at::native::vectorized_elementwise_kernel<int=4, at::native::AddFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::AddFunctor<float>)
+                    2.32%  10.660ms        32  333.13us  330.91us  336.06us  void at::native::unrolled_elementwise_kernel<at::native::MulFunctor<float>, at::detail::Array<char*, int=3>, OffsetCalculator<int=2, unsigned int, bool=0>, OffsetCalculator<int=1, unsigned int, bool=0>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, float, at::native::MulFunctor<float>, char*, int=3, at::detail::Array<char*, int=3>, int=2)
+                    2.19%  10.089ms      1480  6.8160us  1.2160us  21.792us  [CUDA memcpy DtoD]
+                    1.28%  5.8900ms        32  184.06us  181.34us  186.24us  void at::native::_GLOBAL__N__47_tmpxft_0000aac6_00000000_7_EmbeddingBag_cpp1_ii_56f7cc96::EmbeddingBag_updateOutputKernel_sum_mean<float, long>(long*, long, float*, float, long, long, long, long, long, long, int, long, float, long, at::native::_GLOBAL__N__47_tmpxft_0000aac6_00000000_7_EmbeddingBag_cpp1_ii_56f7cc96::EmbeddingBag_updateOutputKernel_sum_mean<float, long>)
+                    1.25%  5.7671ms        32  180.22us  174.88us  183.49us  void at::native::apply::coalesceValuesKernel<float, float>(long*, at::native::apply::coalesceValuesKernel<float, float>, float*, float, long, long, long)
+                    1.09%  5.0084ms       320  15.651us  13.024us  17.536us  volta_sgemm_64x32_sliced1x4_nn
+                    1.04%  4.7690ms       320  14.902us  14.048us  20.896us  volta_sgemm_64x32_sliced1x4_tn
+                    0.84%  3.8699ms       320  12.093us  11.712us  15.968us  volta_sgemm_128x32_nt
+                    0.62%  2.8548ms       664  4.2990us  1.0560us  9.2480us  void at::native::vectorized_elementwise_kernel<int=4, at::native::FillFunctor<float>, at::detail::Array<char*, int=1>>(int, float, at::native::FillFunctor<float>)
+                    0.43%  1.9641ms       320  6.1370us  5.3120us  10.336us  _ZN2at6native13reduce_kernelILi128ELi4ENS0_8ReduceOpIfNS0_14func_wrapper_tIfZNS0_11sum_functorIfffEclERNS_14TensorIteratorEEUlffE_EEjfLi4EEEEEvT1_
+                    0.42%  1.9475ms       640  3.0420us  2.4320us  9.3120us  void splitKreduce_kernel<float, float, float, float>(cublasSplitKParams<float>, float const *, float const *, float*, float const *, float const *, float const *)
+                    0.23%  1.0622ms        32  33.194us  32.544us  33.632us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::BlockSortAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>, thrust::detail::integral_constant<bool, bool=1>, thrust::detail::integral_constant<bool, bool=0>>, bool, thrust::device_ptr<long>, thrust::device_ptr<long>, long, long*, long*, at::native::LTOp<long, bool=0>>(thrust::device_ptr<long>, thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, bool)
+                    0.23%  1.0375ms       320  3.2420us  2.8160us  6.4320us  _ZN2at6native27unrolled_elementwise_kernelIZZZNS0_21copy_device_to_deviceERNS_14TensorIteratorEbENKUlvE1_clEvENKUlvE6_clEvEUlfE_NS_6detail5ArrayIPcLi2EEE16OffsetCalculatorILi1EjLb0EESC_NS0_6memory15LoadWithoutCastENSD_16StoreWithoutCastEEEviT_T0_T1_T2_T3_T4_
+                    0.20%  925.63us       128  7.2310us  5.5680us  9.9520us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::MergeAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>, thrust::detail::integral_constant<bool, bool=1>>, bool, thrust::device_ptr<long>, thrust::device_ptr<long>, long, long*, long*, at::native::LTOp<long, bool=0>, long*, long>(thrust::device_ptr<long>, thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, bool, bool=1, thrust::detail::integral_constant<bool, bool=1>)
+                    0.13%  593.76us       128  4.6380us  3.9680us  9.2800us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__merge_sort::PartitionAgent<thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>>, bool, thrust::device_ptr<long>, long*, long, unsigned long, long*, at::native::LTOp<long, bool=0>, long, int>(thrust::device_ptr<long>, long, long, bool=0, at::native::LTOp<long, bool=0>, thrust::cuda_cub::__merge_sort::PartitionAgent<thrust::device_ptr<long>, long, at::native::LTOp<long, bool=0>>, bool, thrust::device_ptr<long>, long*)
+                    0.12%  551.52us        32  17.235us  14.784us  18.016us  void at::native::apply::sparseElementwiseKernel<TensorCAddOp<float>, unsigned long, float>(float, at::cuda::detail::TensorInfo<unsigned long, TensorCAddOp<float>>, at::cuda::detail<long, unsigned long>, TensorCAddOp<float>, unsigned long)
+                    0.08%  349.02us        32  10.907us  10.688us  11.104us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_forward<float, float, float, int=10, bool=0>(float*, float const *, int, int, int)
+                    0.06%  285.31us        32  8.9160us  8.6080us  9.2160us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_backward<float, float, float, int=10, bool=1>(float*, float const *, float const , int, int, int)
+                    0.06%  253.98us        32  7.9370us  7.8080us  8.1600us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_forward<float, float, float, int=10, bool=1>(float*, float const *, int, int, int)
+                    0.05%  250.50us         2  125.25us  125.09us  125.41us  void at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrayBatchedCopy<float, unsigned int, int=1, int=128, int=1>(float*, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata<at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrayBatchedCopy<float, unsigned int, int=1, int=128, int=1>, unsigned int, int=128, int=1>, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::TensorSizeStride<at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata, unsigned int=4>, int, at::native::_GLOBAL__N__40_tmpxft_00008f32_00000000_7_Shape_cpp1_ii_cedd8df2::CatArrInputTensorMetadata)
+                    0.05%  213.22us        32  6.6630us  6.2720us  8.8640us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__unique_by_key::UniqueByKeyAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int, int*>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int*, int, cub::ScanTileState<int, bool=1>, unsigned long>(thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, long, thrust::equal_to<long>, int, int*, thrust::cuda_cub::__unique_by_key::UniqueByKeyAgent<thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::device_ptr<long>, thrust::equal_to<long>, int, int*>)
+                    0.03%  159.42us        32  4.9820us  3.2000us  8.8960us  void at::native::_GLOBAL__N__43_tmpxft_0000add5_00000000_7_Indexing_cpp1_ii_ccf56567::indexSelectLargeIndex<float, long, unsigned int, int=1, int=1, int=-2, bool=1>(at::cuda::detail::TensorInfo<float, unsigned int>, unsigned int, at::cuda::detail<long, float>, int, int, float, float, long)
+                    0.03%  157.41us        32  4.9180us  3.2320us  8.9600us  _ZN2at6native27unrolled_elementwise_kernelIZZZNS0_21copy_device_to_deviceERNS_14TensorIteratorEbENKUlvE1_clEvENKUlvE6_clEvEUlfE_NS_6detail5ArrayIPcLi2EEE23TrivialOffsetCalculatorILi1EjESC_NS0_6memory12LoadWithCastILi1EEENSD_13StoreWithCastEEEviT_T0_T1_T2_T3_T4_
+                    0.03%  152.61us        32  4.7690us  2.6560us  9.0240us  void at::native::vectorized_elementwise_kernel<int=4, at::native::DivFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::DivFunctor<float>)
+                    0.03%  152.06us        64  2.3760us  1.1200us  9.4720us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__transform::unary_transform_f<thrust::counting_iterator<long, thrust::use_default, thrust::use_default, thrust::use_default>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>, thrust::cuda_cub::__transform::unary_transform_f<thrust::counting_iterator<long, thrust::use_default, thrust::use_default, thrust::use_default>, thrust::device_ptr<long>, thrust::cuda_cub::__transform::no_stencil_tag, thrust::identity<long>, thrust::cuda_cub::__transform::always_true_predicate>, long>(thrust::use_default, thrust::use_default)
+                    0.03%  131.87us        32  4.1200us  4.0000us  4.4160us  void cunn_ClassNLLCriterion_updateOutput_kernel<float, float>(float*, float*, float*, long*, float*, int, int, int, int, long)
+                    0.03%  130.94us        32  4.0920us  4.0000us  4.2560us  void _GLOBAL__N__42_tmpxft_0000a4fa_00000000_7_SoftMax_cpp1_ii_a3310042::softmax_warp_backward<float, float, float, int=10, bool=0>(float*, float const *, float const , int, int, int)
+                    0.02%  88.704us        32  2.7720us  2.7200us  2.9440us  void cunn_ClassNLLCriterion_updateGradInput_kernel<float>(float*, float*, long*, float*, float*, int, int, int, int, long)
+                    0.01%  59.680us        32  1.8650us  1.7600us  2.2720us  void at::native::vectorized_elementwise_kernel<int=4, at::native::MulFunctor<float>, at::detail::Array<char*, int=3>>(int, float, at::native::MulFunctor<float>)
+                    0.01%  57.760us        32  1.8050us  1.3120us  8.8960us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__unique_by_key::InitAgent<cub::ScanTileState<int, bool=1>, int*, int>, cub::ScanTileState<int, bool=1>, unsigned long, int*>(bool=1, cub::ScanTileState<int, bool=1>, int*)
+                    0.01%  52.192us        32  1.6310us  1.6000us  1.9520us  [CUDA memset]
+                    0.01%  44.064us        32  1.3770us  1.3440us  1.5040us  _ZN73_GLOBAL__N__49_tmpxft_0000a36d_00000000_7_RangeFactories_cpp1_ii_a1dd93ac29elementwise_kernel_with_indexIiZZZN2at6native15arange_cuda_outERKN3c106ScalarES6_S6_RNS1_6TensorEENKUlvE_clEvENKUlvE10_clEvEUllE_EEvT_T0_PN15function_traitsISD_E11result_typeE
+      API calls:   42.20%  5.14749s        35  147.07ms       0ns  5.14738s  cudaStreamIsCapturing
+                   35.27%  4.30207s       915  4.7017ms       0ns  4.29835s  cudaEventDestroy
+                    8.71%  1.06236s        21  50.589ms       0ns  589.11ms  cudaFree
+                    7.51%  915.50ms        14  65.393ms  4.2150us  520.30ms  cudaDeviceSynchronize
+                    1.32%  161.31ms      1958  82.385us  5.0430us  19.421ms  cudaMemcpyAsync
+                    1.22%  149.21ms      5232  28.519us  1.5790us  10.214ms  cudaLaunchKernel
+                    0.92%  111.82ms     41834  2.6720us       0ns  6.7152ms  cudaGetDevice
+                    0.89%  108.32ms       402  269.45us  2.6950us  17.632ms  cudaStreamSynchronize
+                    0.44%  54.089ms         6  9.0148ms  86.496us  25.812ms  cudaHostAlloc
+                    0.26%  31.184ms        16  1.9490ms  1.3280ms  2.2268ms  cudaGetDeviceProperties
+                    0.21%  26.192ms        47  557.27us  6.0070us  2.1759ms  cudaMalloc
+                    0.16%  19.635ms      7868  2.4950us       0ns  52.095us  cudaSetDevice
+                    0.13%  16.065ms      1732  9.2750us       0ns  2.5545ms  cudaEventRecord
+                    0.13%  15.768ms      9069  1.7380us       0ns  1.1671ms  cudaGetLastError
+                    0.13%  15.537ms      1373  11.316us      72ns  62.281us  cudaEventQuery
+                    0.11%  13.538ms      1188  11.395us       0ns  773.37us  cuDeviceGetAttribute
+                    0.08%  10.035ms        12  836.29us  607.41us  1.3578ms  cuDeviceTotalMem
+                    0.05%  6.3994ms       960  6.6660us       0ns  1.3126ms  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.05%  6.0120ms         3  2.0040ms  27.229us  5.9445ms  cudaMemcpy
+                    0.05%  5.6642ms       608  9.3160us       0ns  755.13us  cudaEventSynchronize
+                    0.05%  5.5201ms       920  6.0000us       0ns  64.810us  cudaEventCreateWithFlags
+                    0.03%  3.2501ms        12  270.84us  47.056us  752.60us  cuDeviceGetName
+                    0.02%  2.3810ms       280  8.5030us       0ns  43.995us  cudaStreamWaitEvent
+                    0.02%  2.3185ms       304  7.6260us  1.4040us  43.918us  cudaEventElapsedTime
+                    0.01%  1.6637ms        32  51.990us  33.238us  70.901us  cudaMemsetAsync
+                    0.01%  1.1890ms        64  18.577us  2.8850us  242.55us  cudaStreamCreateWithPriority
+                    0.01%  1.1623ms       832  1.3960us       0ns  7.0160us  cudaPeekAtLastError
+                    0.01%  866.78us       388  2.2330us       0ns  8.1250us  cudaDeviceGetAttribute
+                    0.01%  705.60us       360  1.9600us       0ns  30.447us  cudaFuncSetAttribute
+                    0.00%  55.864us        27  2.0690us       0ns  10.189us  cuDevicePrimaryCtxGetState
+                    0.00%  20.527us         6  3.4210us  2.3830us  3.8410us  cuInit
+                    0.00%  17.351us        20     867ns       0ns  1.6290us  cuDeviceGet
+                    0.00%  16.719us        16  1.0440us     882ns  1.2370us  cuDeviceGetUuid
+                    0.00%  13.383us         4  3.3450us  2.8730us  3.8970us  cuDeviceGetPCIBusId
+                    0.00%  9.4560us         8  1.1820us     778ns  1.6220us  cuDeviceGetCount
+                    0.00%  7.1250us         1  7.1250us  7.1250us  7.1250us  cudaFuncGetAttributes
+                    0.00%  6.9810us         4  1.7450us       0ns  3.7520us  cudaGetDeviceCount
+                    0.00%  2.7010us         2  1.3500us  1.2320us  1.4690us  cuDriverGetVersion
+==71506== Profiling application: python -u launcher.py --master_addr=localhost --master_port=29500 --trainer=DdpTrainer --ntrainer=2 --ncudatrainer=0 --filestore=/tmp/tmpn_k_8so02 --nserver=0 --ncudaserver=0 --rpc_timeout=60 --backend=gloo --epochs=1 --batch_size=32 --data=DummyData --mo
+==71506== Profiling result:
+No kernels were profiled.
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+      API calls:   54.18%  2.8988ms         4  724.70us  707.50us  738.69us  cuDeviceTotalMem
+                   41.64%  2.2279ms       404  5.5140us     752ns  220.17us  cuDeviceGetAttribute
+                    3.63%  194.45us         4  48.612us  45.098us  58.093us  cuDeviceGetName
+                    0.24%  12.703us         4  3.1750us  2.3500us  4.7910us  cuDeviceGetPCIBusId
+                    0.14%  7.2510us         8     906ns     774ns  1.5300us  cuDeviceGet
+                    0.07%  3.5950us         4     898ns     814ns  1.0110us  cuDeviceGetUuid
+                    0.06%  3.4210us         3  1.1400us     773ns  1.5900us  cuDeviceGetCount
+                    0.03%  1.8420us         1  1.8420us  1.8420us  1.8420us  cudaGetDeviceCount
